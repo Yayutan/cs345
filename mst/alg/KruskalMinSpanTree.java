@@ -41,8 +41,11 @@ public class KruskalMinSpanTree implements MinSpanTree {
         
         // Add code here in part 4
         
+<<<<<<< HEAD
         
         
+=======
+>>>>>>> 70744c566118b3fb65a4608310f22af2cfee8a55
         return treeEdges;
     }
 
