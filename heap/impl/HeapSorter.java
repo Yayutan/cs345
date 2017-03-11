@@ -28,7 +28,7 @@ public class HeapSorter extends Heap<Integer> {
         heapSize = array.length;
         
         // fix this; set compy to an appropriate comparator
-<<<<<<< HEAD
+
         compy = new Comparator<Integer>(){
         	public int compare(Integer c1, Integer c2){
         		if(c1 > c2) return 1;
@@ -45,19 +45,13 @@ public class HeapSorter extends Heap<Integer> {
         }
     }
 
-=======
-        compy = null;
+
         
-        // insert code for rearranging this as a heap
-    }
-    
->>>>>>> 70744c566118b3fb65a4608310f22af2cfee8a55
     /**
      * Sort this array, in place.
      * @param array The array to sort.
      */
     public static void sort(int[] array) {
-<<<<<<< HEAD
 
         HeapSorter heap = new HeapSorter(array);
 
@@ -72,25 +66,12 @@ public class HeapSorter extends Heap<Integer> {
         	heap.heapify(0);
         }
         	
-        	
-=======
-    
-        HeapSorter heap = new HeapSorter(array);
-
-        
-        // insert code for completing the heap sort algorithm,
-        // with post condition that heap.internal is sorted
-
-        // ...
-        
->>>>>>> 70744c566118b3fb65a4608310f22af2cfee8a55
         // copy elements from internal (now sorted) back to array
         for (int i = 0; i < array.length; i++)
             array[i] = heap.internal[i];
         
         
     }
-<<<<<<< HEAD
     
     public static void printHeap(HeapSorter heap){
 		System.out.print("Heap:");
@@ -98,7 +79,5 @@ public class HeapSorter extends Heap<Integer> {
     		System.out.print(heap.internal[i] + " ");
 		System.out.println("");
     }
-=======
->>>>>>> 70744c566118b3fb65a4608310f22af2cfee8a55
 
 }
