@@ -52,9 +52,55 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends
          */
        protected AVLNode<K,V> fixup() {
             AbstractAVLRealNode replace = this;
-
-            // Write this in the AVL tree project
+//          soft recompute	
             
+            //only the single node 
+            //check by height/balance
+            AbstractAVLRealNode oldLeft, oldRight, oldLeftRight, oldRightLeft;
+            // When there is a violation
+            // Right rotate
+            if(){
+            oldLeft = (AbstractAVLRealNode)this.left;
+            //this.left = null;
+            oldLeft.right = this;
+            return oldLeft;
+            }
+            else if(){
+            // Left rotate
+            oldRight = (AbstractAVLRealNode)this.right;
+            //this.right = null;
+            oldRight.left = this;
+            return oldRight;
+            }
+            else if(){
+            // Right-left
+                oldRight = (AbstractAVLRealNode)this.right;
+                oldRightLeft = (AbstractAVLRealNode) (oldRight.left);
+                this.right = oldRightLeft;
+                oldRight.left = oldRightLeft.left;
+                oldRightLeft.right = oldRight;
+                //should be the line now
+                this.right = oldRightLeft.left;
+                oldRightLeft.left = this;
+                return oldRightLeft;
+            
+            }
+            else if(){
+            // Left-right
+            oldLeft = (AbstractAVLRealNode)this.left;
+            oldLeftRight = (AbstractAVLRealNode) (oldLeft.right);
+            this.left = oldLeftRight;
+            oldLeft.right = oldLeftRight.left;
+            oldLeftRight.left = oldLeft;
+            //should be the line now
+            this.left = oldLeftRight.right;
+            oldLeftRight.right = this;
+            return oldLeftRight;
+            }	
+            
+            
+            // left left
+            //
             return replace;
         }
         
