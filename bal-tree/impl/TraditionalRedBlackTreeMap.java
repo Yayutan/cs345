@@ -1,5 +1,7 @@
 package impl;
 
+import impl.AbstractAVLBSTMap.AbstractAVLRealNode;
+
 /**
  * TraditionalRedBlackTreeMap
  * 
@@ -53,10 +55,45 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends
          * satisfying the constraints.
          */
         protected RBNode<K, V> fixup() {
-
-            // Write this in the Traditional RB Tree project
-
-            return this;
+        	AbstractRBRealNode oldLeft, oldRight;
+        	if(this.left.isRed()){
+        		oldLeft = (AbstractRBRealNode) this.left;
+        			if(this.isRedLL()){
+        				if(this.right.isRed()){
+        					this.redden();
+        					oldLeft.blacken();
+        					this.right.blacken();
+        					return this;
+        				}else
+        					return this.rotateRight();
+        			}else if(this.isRedLR()){
+        				AbstractRBRealNode oldLeftRight = (AbstractRBRealNode) oldLeft.right;
+        				this.left = oldLeftRight;
+        				oldLeft.right = oldLeftRight.left;
+        				oldLeftRight.left = oldLeft;
+        				return this.rotateRight();
+        			}
+        	}
+        	
+        	if(this.right.isRed()){
+        		oldRight = (AbstractRBRealNode) this.right;
+        			if(this.isRedRR()){
+        				if(this.left.isRed()){
+        					this.redden();
+        					this.left.blacken();
+        					oldRight.blacken();
+        					return this;
+        				}else
+        					return this.rotateLeft();
+        			}else if(this.isRedRL()){
+        				AbstractRBRealNode oldRightLeft = (AbstractRBRealNode) oldRight.left;	
+        				this.right = oldRightLeft;
+        				oldRight.left = oldRightLeft.right;
+        				oldRightLeft.right = oldRight;
+        				return this.rotateLeft();
+        			}
+        	}
+        	return this;
         }
 
         
@@ -70,19 +107,29 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends
          * @return The node that is newly the root
          */
         private RBNode<K, V> rotateLeft() {
-            return null;
+        	AbstractRBRealNode oldRight = (AbstractRBRealNode) this.right;	
+        	this.right = oldRight.left;
+        	oldRight.left = this;
+        	oldRight.blacken();
+        	this.redden();
+        	return oldRight;
         }
-        
+
         /**
          * Rotate this tree to the right.
          * @return The node that is newly the root
          */
         private RBNode<K, V> rotateRight() {
-            return null;
+        	AbstractRBRealNode oldLeft = (AbstractRBRealNode) this.left;	
+        	this.left = oldLeft.right;
+        	oldLeft.right = this;
+        	oldLeft.blacken();
+        	this.redden();
+        	return oldLeft;
         }
 
     }
-    
+
     /**
      * Factory method for making new real nodes, used by the
      * code in the parent class which does not have direct access
