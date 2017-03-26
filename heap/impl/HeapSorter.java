@@ -27,7 +27,6 @@ public class HeapSorter extends Heap<Integer> {
             internal[i] = array[i];
         heapSize = array.length;
         
-        // fix this; set compy to an appropriate comparator
 
         compy = new Comparator<Integer>(){
         	public int compare(Integer c1, Integer c2){
@@ -37,7 +36,6 @@ public class HeapSorter extends Heap<Integer> {
         	}
         };
 
-        // insert code for rearranging this as a heap
         if(heapSize != 0){
         	for(int i = (array.length - 1)/2; i >= 0; i--){
         		heapify(i);

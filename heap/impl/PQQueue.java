@@ -29,14 +29,26 @@ public class PQQueue<E> implements Queue<E> {
      */
     private HashMap<E, Integer> arrivalTimes;
 
-
+    /**
+     * Keeps track of the next priority that will be used
+     */
+    private int priority;
     /**
      * Constructor.
      * @param maxSize The capacity of this queue.
      */
     public PQQueue(int maxSize) {
         arrivalTimes = new HashMap<E, Integer>();
+        Comparator<E> compy = new Comparator<E>(){
+        	public int compare(E c1, E c2){
+        		if(arrivalTimes.get(c1) < arrivalTimes.get(c2)) return 1;
+        		if(arrivalTimes.get(c1) > arrivalTimes.get(c2)) return -1;
+        		return 0;
+        	}
+        };
 
+        pq = new HeapPriorityQueue<E>(maxSize, compy);
+        priority = 0;
     }
 
     /**
@@ -56,7 +68,8 @@ public class PQQueue<E> implements Queue<E> {
      * @return The front element.
      */
     public E front() { 
-        throw new UnsupportedOperationException();
+    	if(pq.isEmpty()) throw new NoSuchElementException();
+    	return pq.max();
     }
 
     /**
@@ -64,15 +77,20 @@ public class PQQueue<E> implements Queue<E> {
      * @return The front element.
      */
     public E remove() {
-        throw new UnsupportedOperationException();
-    }
+    	if(pq.isEmpty()) throw new NoSuchElementException();
+    	E toReturn = pq.extractMax();
+    	arrivalTimes.remove(toReturn);
+    	return toReturn;
+		}
 
     /**
      * Add an element to the back of this queue.
      * @param x The element to add.
      */
     public void enqueue(E x) {
-        throw new UnsupportedOperationException();
+    	if(pq.isFull()) throw new FullContainerException();
+    	arrivalTimes.put(x, priority ++);
+    	pq.insert(x);
     }
 
 }

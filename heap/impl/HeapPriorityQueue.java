@@ -79,18 +79,19 @@ public class HeapPriorityQueue<E> extends Heap<E> implements PriorityQueue<E> {
      * @param x The item to insert.
      */
     public void insert(E x) {
-
     	if(isFull()){
-            E[] temp = (E[]) new Object [internal.length * 2];
-            for (int i = 0; i < internal.length; i++)
-                temp[i] = internal[i];
-            internal = temp;    		
+    		E[] temp = (E[]) new Object [internal.length * 2];
+    		for (int i = 0; i < internal.length; i++)
+    			temp[i] = internal[i];
+    		internal = temp;    		
     	}
     	internal[heapSize++] = x;
-    	
-    	for(int test = heapSize - 1; test >= 0; test--){
-    		heapify(test);
-    	}    	
+
+    	int i = heapSize - 1;
+    	while(i > 0){
+    		heapify((i - 1) / 2);
+    		i = (i - 1) / 2;
+    	}
     }
 
     /**
@@ -107,10 +108,9 @@ public class HeapPriorityQueue<E> extends Heap<E> implements PriorityQueue<E> {
      * @return The maximum element.
      */
     public E extractMax() {
-
+    	if(heapSize == 0) return null;
+    	
         E toReturn = internal[0];
-
-        // Add code to remove key and fix up heap
         internal[0] = internal[heapSize - 1];
         heapSize--;
         heapify(0);
