@@ -109,7 +109,6 @@ public class HeapPriorityQueue<E> extends Heap<E> implements PriorityQueue<E> {
      */
     public E extractMax() {
     	if(heapSize == 0) return null;
-    	
         E toReturn = internal[0];
         internal[0] = internal[heapSize - 1];
         heapSize--;

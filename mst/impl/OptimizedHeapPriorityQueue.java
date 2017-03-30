@@ -109,7 +109,53 @@ public class OptimizedHeapPriorityQueue<E extends HeapPositionAware> implements 
      * POSTCONDITION: The subtree rooted at i is a heap.
      */
     protected void heapify(int i) {
-        throw new UnsupportedOperationException();
+    	E temp;
+		E left = null;
+		E right = null;
+		E current = internal[i];
+
+		if(left(i) < heapSize) left = internal[left(i)];
+		if(right(i) < heapSize ) right = internal[right(i)];
+
+		if(left != null && right != null){
+			if(compy.compare(current, right) < 0 && compy.compare(current, left) < 0){
+				temp  = current;
+				if(compy.compare(right, left) < 0){
+					set(i, left);
+					set(left(i),temp);
+					heapify(left(i));
+					
+				}else{
+					set(i, right);
+					set(right(i),temp);
+					heapify(right(i));
+				}
+			}else if(compy.compare(current, left) < 0){
+				temp  = current;
+				set(i, left);
+				set(left(i),temp);
+				heapify(left(i));
+			}else if(compy.compare(current, right) < 0){
+				temp  = current;
+				set(i, right);
+				set(right(i),temp);
+				heapify(right(i));
+			}
+		}else if(left != null){
+			if(compy.compare(current, left) < 0){
+				temp  = current;
+				set(i, left);
+				set(left(i),temp);
+				heapify(left(i));
+			}
+		}else if(right != null){
+			if(compy.compare(current, right) < 0){
+				temp  = current;
+				set(i, right);
+				set(right(i),temp);
+				heapify(right(i));
+			}
+		}
     }
     
     /**
@@ -135,7 +181,19 @@ public class OptimizedHeapPriorityQueue<E extends HeapPositionAware> implements 
      * @param x The item to insert.
      */
     public void insert(E x) {
-        throw new UnsupportedOperationException();
+    	if(isFull()){
+    		E[] temp = (E[]) new Object [internal.length * 2];
+    		for (int i = 0; i < internal.length; i++)
+    			temp[i] = internal[i];
+    		internal = temp;    		
+    	}
+    	internal[heapSize++] = x;
+
+    	int i = heapSize - 1;
+    	while(i > 0){
+    		heapify((i - 1) / 2);
+    		i = (i - 1) / 2;
+    	}
     }
 
     /**
@@ -152,12 +210,12 @@ public class OptimizedHeapPriorityQueue<E extends HeapPositionAware> implements 
      * @return The maximum element.
      */
     public E extractMax() {
-
+        if(heapSize == 0) return null;
         E toReturn = internal[0];
-
-        // add code in part 6
-        
-        return toReturn;
+        set(0, internal[heapSize - 1]);
+        heapSize--;
+        heapify(0);
+        return toReturn;        
     }
 
     /**

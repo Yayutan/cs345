@@ -20,6 +20,9 @@ public abstract class MinSpanTreeTest {
 	public void tinyGraph() {
 		reset();
 		WeightedGraph g = GraphFactory.weightedUndirectedALGraphFromFile("tinyEWG.txt");
+		for(WeightedEdge e:g.edges()){
+			System.out.println("From: " + e.first + "  To: " + e.second + "  Weight: " + e.weight);
+		}
         double totalWeight = 0.0;
         for (WeightedEdge e : mstAlg.minSpanTree(g)) {
         	totalWeight += e.weight;

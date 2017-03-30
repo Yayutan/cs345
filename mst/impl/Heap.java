@@ -61,7 +61,52 @@ public abstract class Heap<E> {
      * POSTCONDITION: The subtree rooted at i is a heap.
      */
     protected void heapify(int i) {
-       throw new UnsupportedOperationException();
+    	E temp;
+		E left = null;
+		E right = null;
+		E current = internal[i];
+
+		if(left(i) < heapSize) left = internal[left(i)];
+		if(right(i) < heapSize ) right = internal[right(i)];
+
+		if(left != null && right != null){
+			if(compy.compare(current, right) < 0 && compy.compare(current, left) < 0){
+				temp  = current;
+				if(compy.compare(right, left) < 0){
+					internal[i] = left;
+					internal[left(i)] = temp;
+					heapify(left(i));
+				}else{
+					internal[i] = right;
+					internal[right(i)] = temp;
+					heapify(right(i));
+				}
+			}else if(compy.compare(current, left) < 0){
+				temp  = current;
+				internal[i] = internal[left(i)];
+				internal[left(i)] = temp;
+				heapify(left(i));
+			}else if(compy.compare(current, right) < 0){
+				temp  = current;
+				internal[i] = internal[right(i)];
+				internal[right(i)] = temp;
+				heapify(right(i));
+			}
+		}else if(left != null){
+			if(compy.compare(current, left) < 0){
+				temp  = current;
+				internal[i] = internal[left(i)];
+				internal[left(i)] = temp;
+				heapify(left(i));
+			}
+		}else if(right != null){
+			if(compy.compare(current, right) < 0){
+				temp  = current;
+				internal[i] = internal[right(i)];
+				internal[right(i)] = temp;
+				heapify(right(i));
+			}
+		}
     }
 
 }

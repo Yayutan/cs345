@@ -56,42 +56,30 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends
          */
         protected RBNode<K, V> fixup() {
         	AbstractRBRealNode oldLeft, oldRight;
+
         	if(this.left.isRed()){
         		oldLeft = (AbstractRBRealNode) this.left;
-        			if(this.isRedLL()){
-        				if(this.right.isRed()){
-        					this.redden();
-        					oldLeft.blacken();
-        					this.right.blacken();
-        					return this;
-        				}else
-        					return this.rotateRight();
-        			}else if(this.isRedLR()){
-        				AbstractRBRealNode oldLeftRight = (AbstractRBRealNode) oldLeft.right;
-        				this.left = oldLeftRight;
-        				oldLeft.right = oldLeftRight.left;
-        				oldLeftRight.left = oldLeft;
-        				return this.rotateRight();
-        			}
+        		if(this.isRedLL())
+        			return fixLL();
+        		else if(this.isRedLR()){
+        			AbstractRBRealNode oldLeftRight = (AbstractRBRealNode) oldLeft.right;
+        			this.left = oldLeftRight;
+        			oldLeft.right = oldLeftRight.left;
+        			oldLeftRight.left = oldLeft;
+        			return fixLL();
+        		}
         	}
-        	
+
         	if(this.right.isRed()){
         		oldRight = (AbstractRBRealNode) this.right;
-        			if(this.isRedRR()){
-        				if(this.left.isRed()){
-        					this.redden();
-        					this.left.blacken();
-        					oldRight.blacken();
-        					return this;
-        				}else
-        					return this.rotateLeft();
-        			}else if(this.isRedRL()){
-        				AbstractRBRealNode oldRightLeft = (AbstractRBRealNode) oldRight.left;	
-        				this.right = oldRightLeft;
-        				oldRight.left = oldRightLeft.right;
-        				oldRightLeft.right = oldRight;
-        				return this.rotateLeft();
-        			}
+        		if(this.isRedRR()) return fixRR();
+        		else if(this.isRedRL()){
+        			AbstractRBRealNode oldRightLeft = (AbstractRBRealNode) oldRight.left;	
+        			this.right = oldRightLeft;
+        			oldRight.left = oldRightLeft.right;
+        			oldRightLeft.right = oldRight;
+        			return fixRR();
+        		}
         	}
         	return this;
         }
@@ -106,26 +94,40 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends
          * Rotate this tree to the left.
          * @return The node that is newly the root
          */
-        private RBNode<K, V> rotateLeft() {
+        private RBNode<K, V> fixRR() {
         	AbstractRBRealNode oldRight = (AbstractRBRealNode) this.right;	
+        	if(this.left.isRed()){
+				this.redden();
+				this.left.blacken();
+				oldRight.blacken();
+				return this;
+			}else{				
         	this.right = oldRight.left;
         	oldRight.left = this;
         	oldRight.blacken();
-        	this.redden();
+        	this.redden();        	
         	return oldRight;
+			}
         }
 
         /**
          * Rotate this tree to the right.
          * @return The node that is newly the root
          */
-        private RBNode<K, V> rotateRight() {
-        	AbstractRBRealNode oldLeft = (AbstractRBRealNode) this.left;	
-        	this.left = oldLeft.right;
-        	oldLeft.right = this;
-        	oldLeft.blacken();
-        	this.redden();
-        	return oldLeft;
+        private RBNode<K, V> fixLL() {
+        	AbstractRBRealNode oldLeft = (AbstractRBRealNode) this.left;
+        	if(this.right.isRed()){
+        		this.redden();
+        		oldLeft.blacken();
+        		this.right.blacken();
+        		return this;
+        	}else{
+        		this.left = oldLeft.right;
+        		oldLeft.right = this;
+        		this.redden();
+        		oldLeft.blacken();
+        		return oldLeft;
+        	}
         }
 
     }

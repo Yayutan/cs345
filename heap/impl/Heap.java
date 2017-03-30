@@ -107,8 +107,6 @@ public abstract class Heap<E> {
 				heapify(right(i));
 			}
 		}
-
-
 	}
 
 	/**
