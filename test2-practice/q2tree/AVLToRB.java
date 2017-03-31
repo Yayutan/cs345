@@ -22,8 +22,16 @@ public class AVLToRB {
      */
     public static RBNode avl2rb(AVLNode root) {
     	if(root == null) return null;
+    	RBNode left = avl2rb(root.left);
+    	RBNode right = avl2rb(root.right);
     	
-
+    	int lbh = (left == null) ? 0 : left.blackHeight();
+    	int rbh = (right == null) ? 0 : right.blackHeight();
+    	
+    	if(lbh > rbh) left.redden();
+    	if(rbh > lbh) right.redden();
+    	
+    	return new RBNode(left, root.key, right);
     
     }
     

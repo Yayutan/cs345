@@ -159,26 +159,31 @@ public class FastBag implements Bag<String> {
 	 * @return An iterator over the bag
 	 */
 	public Iterator<String> iterator() {
+		 int i = 0;
+		 while(i < internal.length && count[i] == 0)
+			 i++;
+
+		final int j = i;
+
 		return new Iterator<String>(){
-			private int index = 0;
-			private int itemLeft = count[0];
+			private int index = j;
+			private int itemLeft = index == internal.length ? 0 : count[index];
+
 			public String next(){
-				if(itemLeft > 0){
-					itemLeft --;
-					return internal[index];
-				}else if(itemLeft == 0){
-					while(itemLeft == 0){
-					index ++;
-					itemLeft = count[index];
-					}
-					itemLeft --;
-					return internal[index];
+				String toReturn = internal[index];
+				itemLeft --;
+				if(itemLeft == 0){
+					do{
+						index ++;
+					}while(index < internal.length && count[index] == 0);
+					if(index != internal.length)
+						itemLeft = count[index];
 				}
-				return null;
+				return toReturn;
 			}
 			
 			public boolean hasNext(){
-				return (index < internal.length && itemLeft > 0);
+				return (index < internal.length);
 			}
 			
 			public void remove(){
