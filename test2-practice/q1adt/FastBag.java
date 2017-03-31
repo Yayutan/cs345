@@ -20,7 +20,7 @@ import java.util.Iterator;
 public class FastBag implements Bag<String> {
 
     
-    
+    private String[] internal;
 
     /**
      * Constructor that takes an iterator that gives
@@ -32,7 +32,10 @@ public class FastBag implements Bag<String> {
      * @param numKeys The number of keys
      */
 	public FastBag(Iterator<String> keys, int numKeys) {
-
+		internal = new String[numKeys];
+		for(int i =  0; i < numKeys; i ++)
+			internal[i] = keys.next();
+		
 	}
 
 
@@ -43,7 +46,18 @@ public class FastBag implements Bag<String> {
 	 * @param item The item to add
 	 */
 	public void add(String item) {
-	    throw new UnsupportedOperationException();
+		int low = 0;
+		int high = internal.length;
+		int mid = (low + high) / 2;
+		
+		for(){
+			int compare = item.compareTo(internal[mid]);
+			if(compare > 0){
+			
+			
+			}
+		}
+		
 	}
 
     /**

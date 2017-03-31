@@ -20,11 +20,10 @@ public abstract class SSSPTest {
         WeightedGraph g = GraphFactory.weightedDirectedALGraphFromFile("tinyEWD.txt");
         double totalWeight = 0.0;
         
+
         for (WeightedEdge e : ssspAlg.sssp(g, start)) {
-            //System.out.println(e.first + " " + e.second + " " + e.weight);
             totalWeight += e.weight;
         }
-        
         assertEquals(correctWeight, totalWeight, 0.01);
 
     }
