@@ -21,10 +21,19 @@ public class AVLToRB {
      * @return The root of an equivalent red-black tree.
      */
     public static RBNode avl2rb(AVLNode root) {
-    	if(root == null) return null;
-    	
-
-    
+        if (root == null) return null;
+        else {
+            assert -2 < root.balance && root.balance < 2;
+            RBNode left = avl2rb(root.left);
+            RBNode right = avl2rb(root.right);
+            int lbh = left == null? 0 : left.blackHeight();
+            int rbh = right == null? 0 : right.blackHeight();
+            if (lbh > rbh) 
+                left.redden();
+            else if (rbh > lbh)
+                right.redden();
+            return new RBNode(left, root.key, right);
+        }
     }
     
 }

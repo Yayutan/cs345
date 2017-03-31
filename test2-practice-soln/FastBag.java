@@ -19,10 +19,8 @@ import java.util.Iterator;
 
 public class FastBag implements Bag<String> {
 
-    
-    private String[] internal;
-    
-    private int[] count;
+    private String[] keys;
+    private int[] counts;
 
     /**
      * Constructor that takes an iterator that gives
@@ -34,15 +32,26 @@ public class FastBag implements Bag<String> {
      * @param numKeys The number of keys
      */
 	public FastBag(Iterator<String> keys, int numKeys) {
-		internal = new String[numKeys];
-		for(int i =  0; i < numKeys; i ++)
-			internal[i] = keys.next();
-
-		count = new int[numKeys];
-		for(int j =  0; j < numKeys; j ++)
-			count[j] = 0;
+	    this.keys = new String[numKeys];
+	    for (int i = 0; keys.hasNext(); i++)
+	        this.keys[i] = keys.next();
+	    counts = new int[numKeys];
 	}
 
+	private int findIndex(String item) {
+	    int start = 0, 
+                stop = keys.length, 
+                mid = keys.length / 2,
+                compare = item.compareTo(keys[mid]);
+      while(stop - start > 1 && compare != 0) {
+            if (compare < 0) stop = mid;
+            else start = mid;
+            mid = (start + stop) / 2;
+            compare = item.compareTo(keys[mid]);
+        }
+        if (compare != 0) return -1;
+        else return mid;
+	}
 
 	/**
 	 * Add an item to the bag, increasing its count by 1.
@@ -51,25 +60,9 @@ public class FastBag implements Bag<String> {
 	 * @param item The item to add
 	 */
 	public void add(String item) {
-		int low = 0;
-		int high = internal.length;
-		int mid = (low + high) / 2;
-		int gap = high - low;
-		
-		while(gap >= 0){
-			int compare = item.compareTo(internal[mid]);
-			if(compare == 0){
-				count[mid] ++;
-				return;
-			}
-			if(compare > 0){
-				low = mid + 1;
-			}else{
-				high = mid - 1;				
-			}
-			mid = (low + high) / 2;
-			gap = high - low;	
-		}
+	    int index = findIndex(item);
+	    assert index != -1;
+	    counts[index]++;
 	}
 
     /**
@@ -82,25 +75,9 @@ public class FastBag implements Bag<String> {
      * @return The count for the given item.
      */
 	public int count(String item) {
-		int low = 0;
-		int high = internal.length;
-		int mid = (low + high) / 2;
-		int gap = high - low;
-		
-		while(gap >= 0){
-			int compare = item.compareTo(internal[mid]);
-			if(compare == 0){
-				return count[mid];
-			}
-			if(compare > 0){
-				low = mid + 1;
-			}else{
-				high = mid - 1;			
-			}
-			mid = (low + high) / 2;
-			gap = high - low;	
-		}	
-		return 0;
+	    int index = findIndex(item);
+	    if (index == -1) return 0;
+	    else return counts[index];
 	}
 
 	/**
@@ -110,25 +87,8 @@ public class FastBag implements Bag<String> {
 	 * @param The item to remove
 	 */
 	public void remove(String item) {
-		int low = 0;
-		int high = internal.length;
-		int mid = (low + high) / 2;
-		int gap = high - low;
-
-		while(gap >= 0){
-			int compare = item.compareTo(internal[mid]);
-			if(compare == 0){
-				count[mid] = 0;
-				return;
-			}
-			if(compare > 0){
-				low = mid + 1;
-			}else{
-				high = mid - 1;			
-			}
-			mid = (low + high) / 2;
-			gap = high - low;	
-		}	
+	    int index = findIndex(item);
+	    if (index != -1) counts[index] = 0;
 	}
 
 	/**
@@ -137,12 +97,10 @@ public class FastBag implements Bag<String> {
 	 * @return The number of items.
 	 */
 	public int size() {
-		int toReturn = 0;
-		for(int i = 0; i < count.length; i ++)
-			toReturn += count[i];
-		
-		return toReturn;
-		
+	    int size = 0;
+	    for (int count : counts)
+	        size += count;
+	    return size;
 	}
 
     /**
@@ -159,33 +117,34 @@ public class FastBag implements Bag<String> {
 	 * @return An iterator over the bag
 	 */
 	public Iterator<String> iterator() {
-		return new Iterator<String>(){
-			private int index = 0;
-			private int itemLeft = count[0];
-			public String next(){
-				if(itemLeft > 0){
-					itemLeft --;
-					return internal[index];
-				}else if(itemLeft == 0){
-					while(itemLeft == 0){
-					index ++;
-					itemLeft = count[index];
-					}
-					itemLeft --;
-					return internal[index];
-				}
-				return null;
-			}
-			
-			public boolean hasNext(){
-				return (index < internal.length && itemLeft > 0);
-			}
-			
-			public void remove(){
-				   throw new UnsupportedOperationException();
-			   } 
-			
-		};
-	}
+        int i = 0;
+        while (i < counts.length && counts[i] == 0)
+            i++;
+        final int finalI = i;
+        return new Iterator<String>() {
+            int index = finalI;
+            int remaining = index == counts.length ? 0 : counts[index];
+            public boolean hasNext() {
+                return index < counts.length;
+            }
+
+            public String next() {
+                String toReturn = keys[index];
+                remaining--;
+                if (remaining == 0) {
+                    do index++;
+                    while(index < counts.length && counts[index] == 0);
+                    if (index != counts.length)
+                        remaining = counts[index];
+                }
+                return toReturn;
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+            
+        };
+    }
 
 }
