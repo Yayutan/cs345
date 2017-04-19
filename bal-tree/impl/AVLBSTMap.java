@@ -34,7 +34,7 @@ AbstractAVLBSTMap<K, V> {
 		public AVLRealNode(K key, V val,
 				AVLNode<K,V> left,
 				AVLNode<K,V> right) {
-			super(key, val, left, right);
+			super(key, val, left, right);			
 		}
 
 		/**
