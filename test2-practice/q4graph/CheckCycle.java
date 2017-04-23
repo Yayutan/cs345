@@ -25,8 +25,22 @@ public class CheckCycle {
      * @return True if the graph contains a cycle involving the given
      * vertex, false otherwise.
      */
-    public static boolean checkCycle(Graph g, int start) {
-        throw new UnsupportedOperationException();
-    }
-    
+	public static boolean checkCycle(Graph g, int start) {
+		Queue <Integer> accessible = new ListQueue <Integer>();
+		boolean [] found = new boolean [g.numVertices()];
+		boolean findStart = false;
+		accessible.enqueue(start);
+		while(!findStart && !accessible.isEmpty()){
+			int current = accessible.remove();
+			for(int v : g.adjacents(current)){
+				if(v == start) findStart = true;
+				else if(!found[v]){
+					found[v] = true;
+					accessible.enqueue(v);
+				}
+			}
+		}
+		return findStart;
+	}
+
 }

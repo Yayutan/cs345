@@ -19,8 +19,17 @@ public class ComputeTranspose {
      * @param g The directed graph to compute the transpose of
      * @return The transpose of the given graph
      */
-    public static AdjListGraph computeTranspose(AdjListGraph g) {
-        throw new UnsupportedOperationException();
-                
-    }
+	public static AdjListGraph computeTranspose(AdjListGraph g) {
+		// make the builder
+		AdjListGraph.ALGBuilder builder = new AdjListGraph.ALGBuilder(g.numVertices());
+		
+		// ... add edges using builder.connect(u, v) ...
+		for(int i = 0; i < g.numVertices(); i++){
+			for(int v : g.adjacents(i)){
+				builder.connect(v, i);
+			}
+		}
+		// now that we're done, get the graph
+		return builder.getGraph();                
+	}
 }

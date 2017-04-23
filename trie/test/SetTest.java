@@ -319,9 +319,9 @@ public abstract class SetTest {
 		testSet.remove(data[4]);
 		testSet.remove(data[9]);
 		for (int i = 0; i < data.length; i++)
-			if (i == 3 || i == 4 || i == 9)
+			if (i == 3 || i == 4 || i == 9){
 				assertFalse(testSet.contains(data[i]));
-			else
+			}else
 				assertTrue(testSet.contains(data[i]));
 		assertEquals(data.length - 3, testSet.size());
 	}
