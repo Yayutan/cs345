@@ -91,7 +91,10 @@ public class BArrayNSet implements NSet {
      * @return The number of items.
      */
     public int size() {
-        throw new UnsupportedOperationException();
+    	int size = 0;
+    	for(int i = 0; i < internal.length; i++)
+    		if(internal[i]) size++;
+    	return size;
     }
 
     /**
@@ -136,8 +139,11 @@ public class BArrayNSet implements NSet {
      * in either this or the other set.
      */
     public NSet union(NSet other) {
-        checkParameter(other);
-        throw new UnsupportedOperationException();
+    	checkParameter(other);
+    	BArrayNSet toReturn = new BArrayNSet(internal.length);
+    	for(int i = 0; i < internal.length; i++)
+    		if(this.contains(i) || other.contains(i)) toReturn.add(i);
+    	return toReturn;
     }
 
     /**
@@ -148,8 +154,11 @@ public class BArrayNSet implements NSet {
      * in both this and the other set.
      */
     public NSet intersection(NSet other) {
-        checkParameter(other);
-        throw new UnsupportedOperationException();
+    	checkParameter(other);
+    	BArrayNSet toReturn = new BArrayNSet(internal.length);
+    	for(int i = 0; i < this.range(); i++)
+    		if(this.contains(i) && other.contains(i)) toReturn.add(i);
+    	return toReturn;
     }
 
     /**
@@ -162,8 +171,10 @@ public class BArrayNSet implements NSet {
      */
     public NSet difference(NSet other) {
         checkParameter(other);
-        throw new UnsupportedOperationException();
-
+        BArrayNSet toReturn = new BArrayNSet(internal.length);
+        for(int i = 0; i < internal.length; i++)
+    		toReturn.internal[i] = internal[i] && !other.contains(i);
+        return toReturn;
     }
 
     /**
@@ -171,15 +182,31 @@ public class BArrayNSet implements NSet {
      * @return An iterator for the items in the NSet.
      */
     public Iterator<Integer> iterator() {
-        // calculate the index of the first true position,
-        // if any; that is, the first value the iterator should
-        // return
-        int j = 0;
-        while (j < internal.length && !internal[j]) j++;
-        final int finalJ = j;
+    	// calculate the index of the first true position,
+    	// if any; that is, the first value the iterator should
+    	// return
 
+    	int j = 0;
+    	while (j < internal.length && !internal[j]) j++;
+    	final int finalJ = j;
 
-        throw new UnsupportedOperationException();
+    	return new Iterator<Integer>(){
+    		private int index = finalJ;
+    		public boolean hasNext(){
+    			while (index < internal.length && !internal[index]){
+    				index++;
+    			}
+    			return index < internal.length;
+    		}
+
+    		public Integer next(){
+    			return index++;        			
+    		}
+
+    		public void remove(){
+    			throw new UnsupportedOperationException();
+    		}
+        };
     }
 
 }
