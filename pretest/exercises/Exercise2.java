@@ -140,7 +140,7 @@ public class Exercise2<E> implements Iterable<E> {
     	Node current = head;
     	Node previous = null;
     	if(index == 0){
-    		head = current.next;
+    		head = head.next;
     		return current.datum;
     	}
     	
@@ -151,7 +151,10 @@ public class Exercise2<E> implements Iterable<E> {
     	}
     	
     	E toReturn = current.datum;
-    	if(current.next == null) tail = previous;
+    	if(current.next == null){
+    		tail = previous;
+    		previous.next = null;
+    	}
     	else previous.next = current.next;
     	return toReturn;
     
