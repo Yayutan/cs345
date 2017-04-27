@@ -1,9 +1,5 @@
 package impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -108,7 +104,8 @@ public class TrieSet implements Set<String> {
 		 * @return The iterator
 		 */
 		public Iterator<String> iterator(final String prefix) {
-			// TODO (BONUS)
+			
+			
 			return null;
 		}
 
@@ -291,7 +288,26 @@ public class TrieSet implements Set<String> {
 	 */
 	public String longestPrefixOf(String s) {
 		// TODO (BONUS)
-		return null;
+		TrieNode current = root;
+		
+		int nextIndex;
+		while(!s.equals("")){
+			nextIndex = c2i(s.charAt(0));
+			current = current.children[nextIndex];
+			s = s.substring(1);
+		}
+		
+		int greatestSize = -1;
+		int greatestIndex = -1;
+		for(int i = 0; i < 26; i++){
+			if(current.children[i] != null){
+				if(current.children[i].size() > greatestSize){
+					greatestIndex = i;
+				}
+			}
+		}
+		
+		return s;
 	}
 
 	/**

@@ -4,6 +4,7 @@ sssp not done
 optimal bst not done
 linear probbing not done
 perfect hashing not done
+trie crashing???
 
 
 LLRB prac

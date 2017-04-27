@@ -28,26 +28,41 @@ public class Sorts {
         int maxVal = 0;
         // A. Find the maximum value in the array
         // ...
+        for(int i = 0; i < array.length; i++){
+        	if(toInt.v(array[i]) > maxVal) maxVal = toInt.v(array[i]);
+        }
         
         // The occurrences of each value (once we calculate them)
         int[] counts = new int[maxVal+1];
         // B. tabulate the occurrences of each value
         // ...
-        
+        for(int i = 0; i < array.length; i++){
+        	counts[toInt.v(array[i])]++;
+        }        
         // The initial places for each value (once we calculate them)
         int[] nextPlace = new int[maxVal+1];
         // C. Determine the initial next place for each value
         nextPlace[0] = 0;
-        // ...
-        
+        int accum = counts[0];
+        for(int j = 1; j < counts.length; j++){
+        	nextPlace[j] = accum;
+        	accum += counts[j];
+        }
         
         // The auxiliary array into which to sort the array
         T[] aux = (T[]) new Object[array.length];
         // D. Sort the items into aux
         // ...
+        for(int k = 0; k < aux.length; k++){
+        	aux[nextPlace[toInt.v(array[k])]] = array[k];
+        	nextPlace[toInt.v(array[k])]++;
+        }
         
         // E. move them back to array
         // ...
+        for(int m = 0; m < aux.length; m++){
+        	array[m] = aux[m];
+        }
     }
 
     /**
@@ -76,8 +91,7 @@ public class Sorts {
             final int rp = rPow;
             countingSort(array, new ToInteger<Integer>() {
                 public int v(Integer item) {
-                    // ...
-                    return -1;
+                	return (item / rp) % r;
                 }
             });
             rPow *= r;
