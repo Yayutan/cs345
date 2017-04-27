@@ -2,6 +2,7 @@ package alg;
 
 import impl.BasicHashSet;
 import impl.HeapPriorityQueue;
+import sun.security.provider.certpath.Vertex;
 import adt.PriorityQueue;
 import adt.Set;
 import adt.WeightedGraph;
@@ -38,11 +39,22 @@ public class DijkstraSSSP implements SSSP {
         distanceBounds[source].setDistance(0);
         PriorityQueue<VertexRecord> pq = 
                 new HeapPriorityQueue<VertexRecord>(distanceBounds, new VertexRecord.VRComparator());
-        
         // add code here in part 4
-        
+        while(!pq.isEmpty()){
+        	VertexRecord from = pq.extractMax();
+        	for(int v: g.adjacents(from.id)){
+        		if(distanceBounds[v].getDistance() > distanceBounds[from.id].getDistance() + g.weight(from.id, v)){
+        			parents[v] = from.id;
+        			distanceBounds[v].setDistance(distanceBounds[from.id].getDistance() + g.weight(from.id, v));
+        			pq.increaseKey(distanceBounds[v]);
+        		}
+        	}
+
+        }
+
+
         Set<WeightedEdge> treeEdges = new BasicHashSet<WeightedEdge>(g.numVertices());
-        
+
         for (int v = 0; v < g.numVertices(); v++) {
             int u = parents[v];
             if (u != -1)
