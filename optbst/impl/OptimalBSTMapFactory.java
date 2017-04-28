@@ -63,6 +63,42 @@ public class OptimalBSTMapFactory {
 
         
         // ----- tree-building algorithm goes here -----
+        Internal[][] tree = new Internal[n][n];
+        double[][] totalP = new double[n][n];
+        double[][] weightD = new double[n][n];
+
+        // Build basic internals first?
+        for(int k = 0 ; k < keys.length; k++){
+        	
+        	
+        }
+        
+        int interval = 1;
+        int j;
+        while(interval < n){
+        	for(int i = 0; i < n; i++){
+        		j = i + interval;
+        		if(interval == 1){
+        			// This is the very bottom layer
+        			//totalP[i][j] = 
+        			// tree[i][j] = 
+        		}else{
+
+
+
+
+        		}
+        	}
+        	interval++;
+        }
+
+
+
+
+        
+        
+        
+        
         
 
         // delete this line
