@@ -19,135 +19,151 @@ import static impl.OptimalBSTMap.dummy;
 
 public class OptimalBSTMapFactory {
 
-    /**
-     * Exception to throw if the input to building an optimal BST
-     * is not right: either the number of keys, values, key probs,
-     * and miss probs aren't consistent, or the total probability
-     * is not 1.
-     */
-    public static class BadOptimalBSTInputException extends RuntimeException {
-        private static final long serialVersionUID = -444687298513060315L;
+	/**
+	 * Exception to throw if the input to building an optimal BST
+	 * is not right: either the number of keys, values, key probs,
+	 * and miss probs aren't consistent, or the total probability
+	 * is not 1.
+	 */
+	public static class BadOptimalBSTInputException extends RuntimeException {
+		private static final long serialVersionUID = -444687298513060315L;
 
-        private BadOptimalBSTInputException(String msg) {
-            super(msg);
-        }
-    }
-    
-    /**
-     * Build an optimal BST from given raw data, passed as a single object.
-     * A convenient overloading of the other buildOptimalBST().
-     * @param rawData The collection of data for building this BST
-     * @return A BST with the given keys and values, optimal with the
-     * given probabilities.
-     */
-    public static OptimalBSTMap buildOptimalBST(OptimalBSTData rawData) {
-        return buildOptimalBST(rawData.keys, rawData.values, rawData.keyProbs, rawData.missProbs);
-    }
-    
-    /**
-     * Build an optimal BST from given raw data, passed as individual arrays.
-     * @param rawData The collection of data for building this BST
-     * @return A BST with the given keys and values, optimal with the
-     * given probabilities.
-     */
-    public static OptimalBSTMap buildOptimalBST(String[] keys, String[] values, double[] keyProbs,
-            double[] missProbs) {
-        
-        // keep these checks
-        checkLengths(keys, values, keyProbs, missProbs);
-        checkProbs(keyProbs, missProbs);        
-        
-        // The number of keys (so we don't need to say keys.length every time)
-        int n = keys.length;
+		private BadOptimalBSTInputException(String msg) {
+			super(msg);
+		}
+	}
 
+	/**
+	 * Build an optimal BST from given raw data, passed as a single object.
+	 * A convenient overloading of the other buildOptimalBST().
+	 * @param rawData The collection of data for building this BST
+	 * @return A BST with the given keys and values, optimal with the
+	 * given probabilities.
+	 */
+	public static OptimalBSTMap buildOptimalBST(OptimalBSTData rawData) {
+		return buildOptimalBST(rawData.keys, rawData.values, rawData.keyProbs, rawData.missProbs);
+	}
 
-        
-        // ----- tree-building algorithm goes here -----
-        Internal[][] tree = new Internal[n][n];
-        double[][] totalP = new double[n][n];
-        double[][] weightD = new double[n][n];
+	/**
+	 * Build an optimal BST from given raw data, passed as individual arrays.
+	 * @param rawData The collection of data for building this BST
+	 * @return A BST with the given keys and values, optimal with the
+	 * given probabilities.
+	 */
+	public static OptimalBSTMap buildOptimalBST(String[] keys, String[] values, double[] keyProbs,
+			double[] missProbs) {
 
-        // Build basic internals first?
-        for(int k = 0 ; k < keys.length; k++){
-        	
-        	
-        }
-        
-        int interval = 1;
-        int j;
-        while(interval < n){
-        	for(int i = 0; i < n; i++){
-        		j = i + interval;
-        		if(interval == 1){
-        			// This is the very bottom layer
-        			//totalP[i][j] = 
-        			// tree[i][j] = 
-        		}else{
+		// keep these checks
+		checkLengths(keys, values, keyProbs, missProbs);
+		checkProbs(keyProbs, missProbs);        
+
+		// The number of keys (so we don't need to say keys.length every time)
+		int n = keys.length;
 
 
 
+		// ----- tree-building algorithm goes here -----
+		Internal[][] tree = new Internal[n][n];
+		double[][] totalP = new double[n][n];
+		double[][] weightD = new double[n][n];
 
-        		}
-        	}
-        	interval++;
-        }
+		// Build basic internals first?
+		for(int k = 0 ; k < keys.length; k++){
 
 
+		}
 
+		int interval = 0;
+		int j;
+		while(interval < n){
+			for(int i = 0; i < n - interval; i++){
+				j = i + interval;
+				if(interval == 0){
+					// This is the very bottom layer
+					totalP[i][j] = missProbs[i] + keyProbs[i] + missProbs[i + 1];
+					weightD[i][j] = 2 * missProbs[i] + keyProbs[i] + 2 * missProbs[i + 1];
+					tree[i][j] = new Internal(dummy, keys[i], values[i], dummy);
+				}else{
+					totalP[i][j] = missProbs[i] + keyProbs[i] + totalP[i+1][j];
+					Internal temp, form = null;
+					double weight;
+					double minWeight = missProbs[i] + totalP[i][j] + weightD[i+1][j];
 
-        
-        
-        
-        
-        
+					for(int current = i; current <= j; current++){
+						
+						if(current == i){
+							// First case: left null
+							weight = missProbs[i] + totalP[i][j] + weightD[i+1][j];
+							temp = new Internal(dummy, keys[i], values[i], tree[i+1][j]);
+							form = temp;
+						}else if(current > i && current < j){
+							// Second case: in between
+							weight = weightD[i][current-1] + totalP[i][j] + weightD[current+1][j];
+							temp = new Internal(tree[i][current-1], keys[current], values[current], tree[current+1][j]);
+						}else{
+							// Third case: right null
+							weight = weightD[i][j-1] + totalP[i][j] + missProbs[j+1];
+							temp = new Internal(tree[i][j-1], keys[j], values[j], dummy);
+						}
+						
+						if(weight < minWeight){
+							minWeight = weight;
+							form = temp;
+						}
 
-        // delete this line
-        return null;
+					}
+					weightD[i][j] = minWeight;
+					tree[i][j] = form;
+				}
+			}
+			interval++;
+		}
+		return new OptimalBSTMap(tree[0][n-1]);
 
-        // your real return statement will have something like
-        // return new OptimalBSTMap( <root of the optimal tree> );
-    }
+		// your real return statement will have something like
+		// return new OptimalBSTMap( <root of the optimal tree> );
+	}
 
-    /**
-     * Check that the given probabilities sum to 1, throw an
-     * exception if not.
-     * @param keyProbs 
-     * @param missProbs
-     */
-    public static void checkProbs(double[] keyProbs, double[] missProbs) {
-        double[] allProbs = new double[keyProbs.length + missProbs.length];
-        int i = 0;
-        for (double keyProb : keyProbs)
-            allProbs[i++] = keyProb;
-        for (double missProb : missProbs)
-            allProbs[i++] = missProb;
-        // When summing doubles, sum from smallest to greatest
-        // to reduce round-off error.
-        Arrays.sort(allProbs);
-        double totalProb = 0;
-        for (double prob : allProbs)
-            totalProb += prob;
-        // Don't compare doubles for equality directly. Check that their
-        // difference is less than some epsion.
-        if (Math.abs(1.0 - totalProb) > .0001)
-            throw new BadOptimalBSTInputException("Probabilities total to " + totalProb);
-    }
+	/**
+	 * Check that the given probabilities sum to 1, throw an
+	 * exception if not.
+	 * @param keyProbs 
+	 * @param missProbs
+	 */
+	public static void checkProbs(double[] keyProbs, double[] missProbs) {
+		double[] allProbs = new double[keyProbs.length + missProbs.length];
+		int i = 0;
+		for (double keyProb : keyProbs)
+			allProbs[i++] = keyProb;
+		for (double missProb : missProbs)
+			allProbs[i++] = missProb;
+		// When summing doubles, sum from smallest to greatest
+		// to reduce round-off error.
+		Arrays.sort(allProbs);
+		double totalProb = 0;
+		for (double prob : allProbs)
+			totalProb += prob;
+		// Don't compare doubles for equality directly. Check that their
+		// difference is less than some epsion.
+		if (Math.abs(1.0 - totalProb) > .0001)
+			throw new BadOptimalBSTInputException("Probabilities total to " + totalProb);
+	}
 
-    /**
-     * Check that the arrays have appropriate lengths (keys, values, and
-     * keyProbs all the same, missProbs one extra), throw an exception
-     * if not.
-     * @param keys
-     * @param values
-     * @param keyProbs
-     * @param missProbs
-     */
-    public static void checkLengths(String[] keys, String[] values,
-            double[] keyProbs, double[] missProbs) {
-        int n = keys.length;
-        if (values.length != n || keyProbs.length != n || missProbs.length != n+1)
-            throw new BadOptimalBSTInputException(n + "keys, " + values.length + " values, " +
-                    keyProbs.length + " key probs, and " + missProbs.length + " miss probs");
-    }
-    
+	/**
+	 * Check that the arrays have appropriate lengths (keys, values, and
+	 * keyProbs all the same, missProbs one extra), throw an exception
+	 * if not.
+	 * @param keys
+	 * @param values
+	 * @param keyProbs
+	 * @param missProbs
+	 */
+	public static void checkLengths(String[] keys, String[] values,
+			double[] keyProbs, double[] missProbs) {
+		int n = keys.length;
+		if (values.length != n || keyProbs.length != n || missProbs.length != n+1)
+			throw new BadOptimalBSTInputException(n + "keys, " + values.length + " values, " +
+					keyProbs.length + " key probs, and " + missProbs.length + " miss probs");
+	}
+
 }
