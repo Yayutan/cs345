@@ -67,11 +67,6 @@ public class OptimalBSTMapFactory {
 		double[][] totalP = new double[n][n];
 		double[][] weightD = new double[n][n];
 
-		// Build basic internals first?
-		for(int k = 0 ; k < keys.length; k++){
-
-
-		}
 
 		int interval = 0;
 		int j;

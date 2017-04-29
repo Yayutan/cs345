@@ -162,11 +162,13 @@ public class LinProbHashMap<K, V> implements Map<K, V> {
 		int best = hash(target);
 		if(best == gap) return 0;
 
-		while(gap != position){
-			if(gap == best) return 1;
-			gap++;
-			if(gap == keys.length) gap = 0;
+
+		if(gap < position){
+			if(best > gap && best < position) return 1;
+		}else{
+			if(best > gap || best < position ) return 1;
 		}
+
 		return -1;
 
 	}

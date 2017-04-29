@@ -1,11 +1,3 @@
-pretest last task not working: remove()
-//linear sorting not done
-//sssp not done
-optimal bst not done
-//linear probbing
-perfect hashing not done
-
-
 LLRB prac
 dynamic practice
 trie bonus

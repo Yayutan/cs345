@@ -100,6 +100,7 @@ public class Exercise2<E> implements Iterable<E> {
     public E get(int index) {
     	checkIndex(index);
     	Node current = head;
+    	if(index == 0) return head.datum;
     	while(index > 0){
     		current = current.next;
     		index --;
@@ -140,8 +141,10 @@ public class Exercise2<E> implements Iterable<E> {
     	Node current = head;
     	Node previous = null;
     	if(index == 0){
+    		E toReturn = current.datum;
     		head = head.next;
-    		return current.datum;
+    		if(head == null)tail = head;
+    		return toReturn;
     	}
     	
     	while(index > 0){
